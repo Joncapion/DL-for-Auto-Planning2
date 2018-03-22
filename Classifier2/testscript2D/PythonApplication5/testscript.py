@@ -127,6 +127,9 @@ def cnn_model_fn(features, labels, mode):
   # Calculate loss for "Regression model"
   loss2 = tf.losses.mean_squared_error(labels, tf.reshape(logits2,[-1]))
 
+  saver = tf.train.Saver({"loss1": loss1,
+                          "loss2": loss2})
+
   # Calculate overall loss
   loss = loss1*0.5+loss2*0.5
 
@@ -165,13 +168,16 @@ def main(unused_args):
   eval_large_labels = ConvNet.ylargeeval
   # Create the Estimator
   DL_classifier = tf.estimator.Estimator(
-      model_fn=cnn_model_fn, model_dir="/tmp/Classifier2/2D")
+      model_fn=cnn_model_fn, model_dir="/tmp/Classifier2/2D/OG")
 
   # Set up logging for predictions
   # Log the values in the "Softmax" tensor with label "probabilities"
   tensors_to_log = {"probabilities": "softmax_tensor"}
   logging_hook = tf.train.LoggingTensorHook(
       tensors=tensors_to_log, every_n_iter=50)
+
+  # Try and log stuff
+
 
   # Train the model
   train_input_fn = tf.estimator.inputs.numpy_input_fn(
