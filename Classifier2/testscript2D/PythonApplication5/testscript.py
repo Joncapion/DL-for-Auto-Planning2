@@ -127,8 +127,6 @@ def cnn_model_fn(features, labels, mode):
   # Calculate loss for "Regression model"
   loss2 = tf.losses.mean_squared_error(labels, tf.reshape(logits2,[-1]))
 
-  saver = tf.train.Saver({"loss1": loss1,
-                          "loss2": loss2})
 
   # Calculate overall loss
   loss = loss1*0.5+loss2*0.5
@@ -175,9 +173,6 @@ def main(unused_args):
   tensors_to_log = {"probabilities": "softmax_tensor"}
   logging_hook = tf.train.LoggingTensorHook(
       tensors=tensors_to_log, every_n_iter=50)
-
-  # Try and log stuff
-
 
   # Train the model
   train_input_fn = tf.estimator.inputs.numpy_input_fn(
