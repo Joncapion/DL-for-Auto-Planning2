@@ -127,6 +127,8 @@ def cnn_model_fn(features, labels, mode):
   # Calculate loss for "Regression model"
   loss2 = tf.losses.mean_squared_error(labels, tf.reshape(logits2,[-1]))
 
+  tf.summary.scalar('loss1', loss1)
+  tf.summary.scalar('loss2', loss2)
 
   # Calculate overall loss
   loss = loss1*0.5+loss2*0.5
