@@ -271,7 +271,7 @@ def main(unused_args):
       f.write("1")
     else:
       f.write("0")
-    f.write(" "+str(p['classes1'])+ " "+str(p['classes2'])+ " "+ str(eval_Large_labels[l])+ " " + str(ConvNet.evalLargeName[l][:]) + "\n")
+    f.write(" "+str(p['classes1'])+ " "+str(p['classes2'])+ " "+ str(eval_large_labels[l])+ " " + str(ConvNet.evalLargeName[l][:]) + "\n")
     l=l+1
   f.close()
 
