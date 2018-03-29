@@ -1,1 +1,0 @@
-java -jar server.jar -l testmap.lvl -c "HAL_Solver.exe -bfs" -g 150 -t 300 -p
