@@ -157,7 +157,7 @@ def cnn_model_fn(features, labels, mode):
   # Densely connected layer with 1024 neurons
   # Input Tensor Shape: [batch_size, 2 * 2 * 128]
   # Output Tensor Shape: [batch_size, 1024]
-  dense = tf.layers.dense(inputs=module1filter_flat, units=10240, activation=tf.nn.relu)
+  dense = tf.layers.dense(inputs=module2filter_flat, units=10240, activation=tf.nn.relu)
 
   # Add dropout operation; 0.6 probability that element will be kept
   dropout = tf.layers.dropout(
