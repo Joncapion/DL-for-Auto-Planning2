@@ -60,7 +60,7 @@ def cnn_model_fn(features, labels, mode):
 
   # Input Tensor Shape: [batch_size, 16, 16, 16]
   # Output Tensor Shape: [batch_size, 16, 16, 16]
-  module1_pool1 = tf.layers.max_pooling2d(inputs=input_layer, pool_size=[2, 2], strides=2, padding="same")
+  module1_pool1 = tf.layers.max_pooling2d(inputs=input_layer, pool_size=[2, 2], strides=1, padding="same")
 
   # Computes 32 features using a 1x1 filter with ReLU activation.
   # Padding is added to preserve width and height.
