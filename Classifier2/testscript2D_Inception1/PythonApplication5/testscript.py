@@ -23,37 +23,36 @@ def cnn_model_fn(features, labels, mode):
 
   # Inception module #1
 
-
-  # Computes 32 features using a 1x1 filter with ReLU activation.
+  # Computes 8 features using a 1x1 filter with ReLU activation.
   # Padding is added to preserve width and height.
   # Input Tensor Shape: [batch_size, 16, 16, 16]
-  # Output Tensor Shape: [batch_size, 16, 16, 32]
+  # Output Tensor Shape: [batch_size, 16, 16, 8]
   module1_conv1 = tf.layers.conv2d(
       inputs=input_layer,
-      filters=32,
+      filters=8,
       kernel_size=[1, 1],
       padding="same",
       activation=tf.nn.relu)
 
 
-  # Computes 32 features using a 1x1 filter with ReLU activation.
+  # Computes 8 features using a 1x1 filter with ReLU activation.
   # Padding is added to preserve width and height.
-  # Input Tensor Shape: [batch_size, 16, 16, 32]
-  # Output Tensor Shape: [batch_size, 16, 16, 32]
+  # Input Tensor Shape: [batch_size, 16, 16, 8]
+  # Output Tensor Shape: [batch_size, 16, 16, 8]
   module1_conv2 = tf.layers.conv2d(
       inputs=module1_conv1,
-      filters=32,
+      filters=8,
       kernel_size=[3, 3],
       padding="same",
       activation=tf.nn.relu)
 
-  # Computes 32 features using a 1x1 filter with ReLU activation.
+  # Computes 8 features using a 1x1 filter with ReLU activation.
   # Padding is added to preserve width and height.
-  # Input Tensor Shape: [batch_size, 16, 16, 32]
-  # Output Tensor Shape: [batch_size, 16, 16, 32]
+  # Input Tensor Shape: [batch_size, 16, 16, 16]
+  # Output Tensor Shape: [batch_size, 16, 16, 16]
   module1_conv3 = tf.layers.conv2d(
       inputs=module1_conv1,
-      filters=32,
+      filters=8,
       kernel_size=[5, 5],
       padding="same",
       activation=tf.nn.relu)
@@ -62,13 +61,15 @@ def cnn_model_fn(features, labels, mode):
   # Output Tensor Shape: [batch_size, 16, 16, 16]
   module1_pool1 = tf.layers.max_pooling2d(inputs=input_layer, pool_size=[2, 2], strides=1, padding="same")
 
-  # Computes 32 features using a 1x1 filter with ReLU activation.
+
+
+  # Computes 8 features using a 1x1 filter with ReLU activation.
   # Padding is added to preserve width and height.
   # Input Tensor Shape: [batch_size, 16, 16, 16]
-  # Output Tensor Shape: [batch_size, 16, 16, 32]
+  # Output Tensor Shape: [batch_size, 16, 16, 8]
   module1_pool1conv1 = tf.layers.conv2d(
       inputs=module1_pool1,
-      filters=32,
+      filters=8,
       kernel_size=[1, 1],
       padding="same",
       activation=tf.nn.relu)
@@ -76,20 +77,87 @@ def cnn_model_fn(features, labels, mode):
   # Filter concatenation
   module1filter = tf.concat([module1_conv1, module1_conv2, module1_conv3, module1_pool1conv1], axis=3)
 
+  # Input Tensor Shape: [batch_size, 16, 16, 32]
+  # Output Tensor Shape: [batch_size, 16, 16, 16]
+  conv1 = tf.layers.conv2d(
+      inputs=module1filter,
+      filters=16,
+      kernel_size=[3, 3],
+      padding="same",
+      activation=tf.nn.relu)
 
+  # Input Tensor Shape: [batch_size, 16, 16, 16]
+  # Output Tensor Shape: [batch_size, 8, 8, 16]
+  pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2, padding="same")
+
+  # Inception module #2
+
+  # Computes 8 features using a 1x1 filter with ReLU activation.
+  # Padding is added to preserve width and height.
+  # Input Tensor Shape: [batch_size, 8, 8, 16]
+  # Output Tensor Shape: [batch_size, 8, 8, 32]
+  module2_conv1 = tf.layers.conv2d(
+      inputs= pool1,
+      filters=32,
+      kernel_size=[1, 1],
+      padding="same",
+      activation=tf.nn.relu)
+
+
+  # Computes 32 features using a 1x1 filter with ReLU activation.
+  # Padding is added to preserve width and height.
+  # Input Tensor Shape: [batch_size, 8, 8, 16]
+  # Output Tensor Shape: [batch_size, 8, 8, 32]
+  module2_conv2 = tf.layers.conv2d(
+      inputs=module2_conv1,
+      filters=32,
+      kernel_size=[3, 3],
+      padding="same",
+      activation=tf.nn.relu)
+
+  # Computes 32 features using a 1x1 filter with ReLU activation.
+  # Padding is added to preserve width and height.
+  # Input Tensor Shape: [batch_size, 8, 8, 16]
+  # Output Tensor Shape: [batch_size, 8, 8, 32]
+  module2_conv3 = tf.layers.conv2d(
+      inputs=module2_conv1,
+      filters=32,
+      kernel_size=[5, 5],
+      padding="same",
+      activation=tf.nn.relu)
+
+  # Input Tensor Shape: [batch_size, 8, 8, 16]
+  # Output Tensor Shape: [batch_size, 8, 8, 16]
+  module2_pool1 = tf.layers.max_pooling2d(inputs=pool1, pool_size=[2, 2], strides=1, padding="same")
+
+
+
+  # Computes 32 features using a 1x1 filter with ReLU activation.
+  # Padding is added to preserve width and height.
+  # Input Tensor Shape: [batch_size, 8, 8, 16]
+  # Output Tensor Shape: [batch_size, 8, 8, 32]
+  module2_pool1conv1 = tf.layers.conv2d(
+      inputs=module2_pool1,
+      filters=32,
+      kernel_size=[1, 1],
+      padding="same",
+      activation=tf.nn.relu)
+
+  # Filter concatenation
+  module2filter = tf.concat([module2_conv1, module2_conv2, module2_conv3, module2_pool1conv1], axis=3)
 
 
   # Flatten tensor into a batch of vectors
   # Input Tensor Shape: [batch_size, 16, 16, 32+32+32+32]
   # Output Tensor Shape: [batch_size, 16 * 16 * (32+32+32+32)]
-  module1filter_flat= tf.reshape(module1filter, [-1, 16*16*(32+32+32+32)])
+  module2filter_flat= tf.reshape(module2filter, [-1, 8*8*(32+32+32+32)])
 
 
   # Dense Layer
   # Densely connected layer with 1024 neurons
   # Input Tensor Shape: [batch_size, 2 * 2 * 128]
   # Output Tensor Shape: [batch_size, 1024]
-  dense = tf.layers.dense(inputs=module1filter_flat, units=1024, activation=tf.nn.relu)
+  dense = tf.layers.dense(inputs=module1filter_flat, units=10240, activation=tf.nn.relu)
 
   # Add dropout operation; 0.6 probability that element will be kept
   dropout = tf.layers.dropout(
